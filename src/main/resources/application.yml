@@ -1,0 +1,33 @@
+spring:
+  flyway:
+    url: jdbc:postgresql://localhost:5432/junior_math
+    user: junior_math
+    password: HJAtwwdWQJtVyQWm
+    locations: "classpath:db/migration"
+  datasource:
+    url: jdbc:postgresql://localhost:5432/junior_math
+    username: junior_math
+    password: HJAtwwdWQJtVyQWm
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8100/realms/junior-math
+
+keycloak:
+  admin-username: admin
+  admin-password: admin
+  admin-realm: master
+  admin-client-id: admin-cli
+  realm: junior-math
+  roles: roles
+  client-id: junior-math-client
+  client-secret: kiPWxTkXjM77l9UeeI8GOHEH6DzPY1wp
+  auth-server-url: http://localhost:8100
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui-custom.html

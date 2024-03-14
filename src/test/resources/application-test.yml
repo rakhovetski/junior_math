@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    username: admin
+    password: admin
+  flyway:
+    user: admin
+    password: admin
