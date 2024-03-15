@@ -13,18 +13,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomCreateRequestDto {
+public class RoomUpdateRequestDto {
 
-    @NotBlank
     @Size(min = 2, max = 256)
     @JsonProperty("name")
-    @Schema(description = "Room name", example = "Unified state exam")
+    @Schema(description = "room name", example = "Unified state exam", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String name;
 
-    @NotBlank
     @Min(value = 1)
     @Max(value = 11)
     @JsonProperty("class_number")
-    @Schema(description = "Room class number", example = "11")
+    @Schema(description = "class number", example = "11", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Short classNumber;
 }

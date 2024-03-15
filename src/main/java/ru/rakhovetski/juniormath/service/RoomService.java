@@ -1,13 +1,16 @@
 package ru.rakhovetski.juniormath.service;
 
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import ru.rakhovetski.juniormath.domain.dto.rooms.RoomCreateRequestDto;
-import ru.rakhovetski.juniormath.domain.dto.rooms.RoomResponseDto;
+import ru.rakhovetski.juniormath.domain.dto.DefaultResponseDto;
+import ru.rakhovetski.juniormath.domain.dto.rooms.*;
 
 public interface RoomService {
 
-    RoomResponseDto createRoom(RoomCreateRequestDto requestDto, Jwt authenticationToken);
+    RoomResponseDto createRoom(RoomCreateRequestDto requestDto, Jwt jwtToken);
 
+    RoomResponseDto updateRoom(Integer id, RoomUpdateRequestDto requestDto, Jwt jwtToken);
 
+    DefaultResponseDto deleteRoom(Integer id, Jwt token);
+
+    RoomsDetailResponseDto findRoomByCode(RoomCodeRequestDto requestDto);
 }

@@ -21,6 +21,12 @@ public class TaskTest implements BaseEntity<Integer>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "student_answer")
+    private String studentAnswer;
+
+    @Column(name = "student_id")
+    private Integer studentId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;
@@ -28,10 +34,6 @@ public class TaskTest implements BaseEntity<Integer>{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id")
     private Test test;
-
-    @Builder.Default
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "taskTest")
-    private List<Statistic> statistics = new ArrayList<>();
 
     public void setTask(Task task) {
         this.task = task;

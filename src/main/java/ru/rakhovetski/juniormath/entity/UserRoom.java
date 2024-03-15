@@ -29,10 +29,6 @@ public class UserRoom implements BaseEntity<Integer> {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @Builder.Default
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userRoom")
-    private List<Statistic> statistics = new ArrayList<>();
-
     public void setUser(User user) {
         this.user = user;
         this.user.getUserRooms().add(this);

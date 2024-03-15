@@ -12,6 +12,8 @@ public enum ErrorCode {
     INCORRECT_ROLE_NAME("Incorrect role name"),
     USER_REGISTRATION_ERROR("User registration error"),
     USER_NOT_FOUND("User not found"),
+    ROOM_NOT_FOUND("Room not found"),
+    TEACHER_CANNOT_CHANGE_ROOM("The teacher cannot change the room"),
     TASK_DOES_NOT_EXISTS("Task does not exist");
 
     private final String message;

@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS task
     updated_at       timestamp   default now(),
     teacher_id       int
     references       teacher(id),
-    subject_id  int
+    subject_id       int
     references       subject(id)
 );
 
@@ -95,7 +95,9 @@ CREATE TABLE IF NOT EXISTS test
     primary key,
     name             varchar(256)                                  not null,
     created_at       timestamp   default now()                     not null,
-    started_at       timestamp
+    started_at       timestamp,
+    room_id          int
+    references       room(id)
 );
 
 
@@ -106,16 +108,7 @@ CREATE TABLE IF NOT EXISTS task_test
     task_id          int
     references       task(id),
     test_id          int
-    references       test(id)
-);
-
-
-CREATE TABLE IF NOT EXISTS statistic
-(
-    id               serial                                        not null
-    primary key,
-    users_room_id    int
-    references       users_room(id),
-    task_test_id     int
-    references       task_test(id)
+    references       test(id),
+    student_answer   varchar(128),
+    student_id       int
 );

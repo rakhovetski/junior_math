@@ -40,4 +40,8 @@ public class Room implements BaseEntity<Integer>{
     @Builder.Default
     @OneToMany(mappedBy = "room")
     private List<UserRoom> userRooms = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "room")
+    private List<Test> tests = new ArrayList<>();
 }

@@ -34,4 +34,8 @@ public class Test implements BaseEntity<Integer>{
     @Builder.Default
     @OneToMany(mappedBy = "test")
     private List<TaskTest> taskTests = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private Room room;
 }
