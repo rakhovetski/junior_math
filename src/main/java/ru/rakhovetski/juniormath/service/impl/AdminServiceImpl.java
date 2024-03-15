@@ -3,21 +3,16 @@ package ru.rakhovetski.juniormath.service.impl;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.RoleMappingResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.rakhovetski.juniormath.config.security.keycloak.KeyCloakConstants;
-import ru.rakhovetski.juniormath.domain.dto.auth.KeycloakAccessTokenResponse;
-import ru.rakhovetski.juniormath.domain.dto.auth.LoginUserRequestDto;
 import ru.rakhovetski.juniormath.domain.dto.auth.RegistrationRequestDto;
 import ru.rakhovetski.juniormath.domain.dto.auth.RegistrationResponseDto;
 import ru.rakhovetski.juniormath.entity.Role;
@@ -27,7 +22,7 @@ import ru.rakhovetski.juniormath.entity.User;
 import ru.rakhovetski.juniormath.domain.enums.ErrorCode;
 import ru.rakhovetski.juniormath.exception.IncorrectTaskDataException;
 import ru.rakhovetski.juniormath.exception.RegistrationInternalException;
-import ru.rakhovetski.juniormath.mapper.KeycloakAccessTokenMapper;
+import ru.rakhovetski.juniormath.exception.UnableCreateAdminException;
 import ru.rakhovetski.juniormath.mapper.UserKeycloakMapper;
 import ru.rakhovetski.juniormath.repository.StudentRepository;
 import ru.rakhovetski.juniormath.repository.TeacherRepository;
@@ -45,7 +40,6 @@ import java.util.List;
 public class AdminServiceImpl implements AdminService {
 
     private final Keycloak keycloakAdmin;
-    private final KeycloakAccessTokenMapper keycloakAccessTokenMapper;
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
@@ -63,17 +57,20 @@ public class AdminServiceImpl implements AdminService {
         UserRepresentation user = UserKeycloakMapper.mapUserToKeycloak(requestDto);
 
         try (Response response = usersResource.create(user)) {
+            User savedUser;
             log.info("User successfully created in keycloak with username - {}", requestDto.getUsername());
             addRealmRoleToUser(requestDto.getUsername(), requestDto.getRole());
             if (requestDto.getRole().equals(Role.STUDENT.getName())) {
-                User savedUser = saveUserToRepository(requestDto, Role.STUDENT);
+                savedUser = saveUserToRepository(requestDto, Role.STUDENT);
                 saveStudentToRepository(savedUser);
             } else if (requestDto.getRole().equals(Role.TEACHER.getName())) {
-                User savedUser = saveUserToRepository(requestDto, Role.TEACHER);
+                savedUser = saveUserToRepository(requestDto, Role.TEACHER);
                 saveTeacherToRepository(savedUser);
+            } else {
+                throw new UnableCreateAdminException(ErrorCode.UNABLE_CREATE_ADMIN.getMessage());
             }
 
-            return new RegistrationResponseDto(requestDto.getUsername(), requestDto.getEmail(), requestDto.getLastname(),
+            return new RegistrationResponseDto(savedUser.getId(), requestDto.getUsername(), requestDto.getEmail(), requestDto.getLastname(),
                     requestDto.getFirstname(), requestDto.getPatronymic(), requestDto.getRole());
         } catch (Exception ex) {
             log.error("An error occurred during user creation with username - {}", requestDto.getUsername());
