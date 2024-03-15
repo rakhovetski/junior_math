@@ -11,6 +11,8 @@ import ru.rakhovetski.juniormath.entity.Task;
 import ru.rakhovetski.juniormath.integrational.IntegrationBaseTest;
 import ru.rakhovetski.juniormath.repository.TaskRepository;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @Sql({
@@ -21,8 +23,6 @@ public class TaskRepositoryTest extends IntegrationBaseTest {
 
     @Autowired
     private TaskRepository taskRepository;
-
-    private static final String TEACHER_ID = "17bd3e93-56f3-4264-b7f1-1f27fd1d5424";
     private static final Integer PAGE_SIZE = 10;
     private static final Integer PAGE_NUMBER = 0;
 
@@ -35,7 +35,7 @@ public class TaskRepositoryTest extends IntegrationBaseTest {
         String topicAl = "topicAl";
 
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
-        Page<Task> result = taskRepository.findAllBySubjectIdAndClassNumber(subject_id, class_number, pageable);
+        Page<Task> result = taskRepository.findAllByFilters(List.of(subject_id), List.of(class_number), pageable);
 
         assertEquals(totalPageCount, result.getTotalElements());
 
@@ -54,7 +54,7 @@ public class TaskRepositoryTest extends IntegrationBaseTest {
         String topicIT2 = "topicIT2";
 
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
-        Page<Task> result = taskRepository.findAllBySubjectIdAndClassNumber(subjectId, classNumber, pageable);
+        Page<Task> result = taskRepository.findAllByFilters(List.of(subjectId), List.of(classNumber), pageable);
 
         assertEquals(totalPageCount, result.getTotalElements());
 
@@ -74,7 +74,7 @@ public class TaskRepositoryTest extends IntegrationBaseTest {
         Integer subject_id = 1;
         Short incorrectClassNumber = 12;
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
-        Page<Task> result = taskRepository.findAllBySubjectIdAndClassNumber(subject_id, incorrectClassNumber, pageable);
+        Page<Task> result = taskRepository.findAllByFilters(List.of(subject_id), List.of(incorrectClassNumber), pageable);
 
         assertEquals(0, result.getTotalElements());
     }

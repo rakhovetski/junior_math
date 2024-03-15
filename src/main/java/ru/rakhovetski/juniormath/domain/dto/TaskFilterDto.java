@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskFilterDto {
 
-    private Integer subjectId;
-    private Short classNumber;
+    private List<Integer> subjectIds;
+    private List<Short> classNumbers;
 }

@@ -99,6 +99,7 @@ public class RoomServiceImpl implements RoomService {
                 LocalDateTime.now());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public RoomsDetailResponseDto findRoomByCode(RoomCodeRequestDto requestDto) {
         Room room = findRoomByCode(requestDto.getCode());

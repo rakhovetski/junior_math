@@ -2,6 +2,7 @@ package ru.rakhovetski.juniormath.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.antlr.v4.runtime.misc.IntSet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,11 @@ import ru.rakhovetski.juniormath.repository.TeacherRepository;
 import ru.rakhovetski.juniormath.service.TaskService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -31,7 +37,7 @@ import java.time.LocalDateTime;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
-    private final SubjectRepository subjectNameRepository;
+    private final SubjectRepository subjectRepository;
     private final TeacherRepository teacherRepository;
     private final CreatedTaskMapper taskMapper;
 
@@ -39,16 +45,13 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public PageResponseDto<TaskResponseDto> findAllTasksWithPagination(TaskFilterDto taskFilter, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Task> result;
-        if (taskFilter.getClassNumber() != null && taskFilter.getSubjectId() != null) {
-            result = taskRepository.findAllBySubjectIdAndClassNumber(taskFilter.getSubjectId(), taskFilter.getClassNumber(), pageable);
-        } else if (taskFilter.getSubjectId() != null) {
-            result = taskRepository.findAllBySubjectId(taskFilter.getSubjectId(), pageable);
-        } else if (taskFilter.getClassNumber() != null) {
-            result = taskRepository.findAllByClassNumber(taskFilter.getClassNumber(), pageable);
-        } else {
-            result = taskRepository.findAllBy(pageable);
+        if (taskFilter.getSubjectIds() == null) {
+            taskFilter.setSubjectIds(subjectRepository.findAll().stream().map(Subject::getId).collect(Collectors.toList()));
         }
+        if (taskFilter.getClassNumbers() == null) {
+            taskFilter.setClassNumbers(IntStream.range(1, 11).boxed().toList().stream().map(Short.class::cast).toList());
+        }
+        Page<Task> result = taskRepository.findAllByFilters(taskFilter.getSubjectIds(), taskFilter.getClassNumbers(), pageable);
 
         return PageResponseDto.of(result.map(taskMapper::map));
     }
@@ -66,7 +69,7 @@ public class TaskServiceImpl implements TaskService {
         validateTaskRequest(requestDto);
 
         Teacher teacher = teacherRepository.findById(requestDto.getTeacherId()).get();
-        Subject subject = subjectNameRepository.findById(requestDto.getSubjectId()).get();
+        Subject subject = subjectRepository.findById(requestDto.getSubjectId()).get();
 
         Task task = Task.builder()
                 .classNumber(requestDto.getClassNumber())
@@ -85,10 +88,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private void validateTaskRequest(TaskCreateRequestDto requestDto) {
-        if (requestDto.getTeacherId() == null || requestDto.getSubjectId() == null) {
-            throw new IncorrectTaskDataException(ErrorCode.INCORRECT_TASK_DATA.getMessage());
-        }
-        if (subjectNameRepository.findById(requestDto.getSubjectId()).isEmpty()) {
+        if (subjectRepository.findById(requestDto.getSubjectId()).isEmpty()) {
             throw new SubjectNotFoundException(ErrorCode.SUBJECT_NOT_FOUND.getMessage());
         }
         if (teacherRepository.findById(requestDto.getTeacherId()).isEmpty()) {
