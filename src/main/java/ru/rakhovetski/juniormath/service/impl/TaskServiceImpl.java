@@ -72,12 +72,11 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.map(task);
     }
 
+
     @Override
     public TaskResponseDto createTask(TaskCreateRequestDto requestDto, Jwt jwtToken) {
-        validateTaskRequest(requestDto);
-
-        Teacher teacher = teacherRepository.findById(requestDto.getTeacherId()).get();
-        Subject subject = subjectRepository.findById(requestDto.getSubjectId()).get();
+        Teacher teacher = findTeacherById(requestDto.getTeacherId());
+        Subject subject = findSubjectById(requestDto.getSubjectId());
 
         String username = DataByJwtUtil.getUsernameJwtClaim(jwtToken);
 
@@ -101,6 +100,7 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.map(result);
     }
 
+
     @Override
     public TaskResponseDto updateTask(Integer taskId, TaskUpdateRequestDto requestDto, Jwt jwtToken) {
         Task task = findTaskByIdCheck(taskId);
@@ -113,6 +113,11 @@ public class TaskServiceImpl implements TaskService {
         task.setTopic(Optional.ofNullable(requestDto.getTopic()).orElse(task.getTopic()));
         task.setSolve(Optional.ofNullable(requestDto.getSolve()).orElse(task.getSolve()));
         task.setCondition(Optional.ofNullable(requestDto.getCondition()).orElse(task.getCondition()));
+
+        if (requestDto.getSubjectId() != null) {
+            Subject subject = findSubjectById(requestDto.getSubjectId());
+            task.setSubject(subject);
+        }
 
         Task result = taskRepository.save(task);
 
@@ -137,15 +142,13 @@ public class TaskServiceImpl implements TaskService {
                 LocalDateTime.now());
     }
 
-    private void validateTaskRequest(TaskCreateRequestDto requestDto) {
-        if (subjectRepository.findById(requestDto.getSubjectId()).isEmpty()) {
-            log.error("Error - the subject was not found by id");
-            throw new SubjectNotFoundException(ErrorCode.SUBJECT_NOT_FOUND.getMessage());
-        }
-        if (teacherRepository.findById(requestDto.getTeacherId()).isEmpty()) {
-            log.error("Error - the teacher was not found by id");
-            throw new TeacherNotFoundException(ErrorCode.TEACHER_NOT_FOUND.getMessage());
-        }
+    private Teacher findTeacherById(Integer id) {
+        return teacherRepository.findById(id).orElseThrow(
+                () -> {
+                    log.error("Error - the teacher was not found by id");
+                    return new TeacherNotFoundException(ErrorCode.TEACHER_NOT_FOUND.getMessage());
+                }
+        );
     }
 
     private Task findTaskByIdCheck(Integer id) {
@@ -153,6 +156,15 @@ public class TaskServiceImpl implements TaskService {
                 () -> {
                     log.error("Error - the task was not found by id");
                     return new TaskNotFoundException(ErrorCode.TASK_NOT_FOUND.getMessage());
+                }
+        );
+    }
+
+    private Subject findSubjectById(Integer id) {
+        return subjectRepository.findById(id).orElseThrow(
+                () -> {
+                    log.error("Error - the task was not found by id");
+                    return new SubjectNotFoundException(ErrorCode.SUBJECT_NOT_FOUND.getMessage());
                 }
         );
     }

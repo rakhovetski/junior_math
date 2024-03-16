@@ -29,4 +29,7 @@ public class TaskUpdateRequestDto {
 
     @JsonProperty("solve")
     private String solve;
+
+    @JsonProperty("subject_id")
+    private Integer subjectId;
 }

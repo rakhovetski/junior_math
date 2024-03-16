@@ -18,5 +18,4 @@ public class TaskServiceTest extends IntegrationBaseTest {
     @Autowired
     private TaskService taskService;
 
-    @Test
 }

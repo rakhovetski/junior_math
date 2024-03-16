@@ -3,7 +3,6 @@ package ru.rakhovetski.juniormath.http.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,7 @@ import ru.rakhovetski.juniormath.domain.dto.*;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskCreateRequestDto;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskFilterDto;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskResponseDto;
-import ru.rakhovetski.juniormath.exception.TeacherNotFoundException;
+import ru.rakhovetski.juniormath.domain.dto.tasks.TaskUpdateRequestDto;
 import ru.rakhovetski.juniormath.service.TaskService;
 
 @Slf4j
@@ -39,13 +38,13 @@ public class TaskRestControllerV1 {
                     @ApiResponse(responseCode = "500", description = "Internal server error",
                             content = {
                                     @Content(mediaType = "application/json", schema =
-                                    @Schema(implementation = Exception.class))
+                                    @Schema(implementation = DefaultResponseDto.class))
                             }
                     )
             }
     )
     @GetMapping
-    @PreAuthorize("hasRole('admin') || hasRole('teacher')")
+    @PreAuthorize("hasRole('teacher')")
     public PageResponseDto<TaskResponseDto> findAllWithPagination(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
@@ -66,7 +65,7 @@ public class TaskRestControllerV1 {
                                     @Content(mediaType = "application/json", schema =
                                     @Schema(implementation = TaskResponseDto.class))
                             }),
-                    @ApiResponse(responseCode = "400", description = "Incorrect task id",
+                    @ApiResponse(responseCode = "400", description = "Bad request - incorrect task id",
                             content = {
                                     @Content(mediaType = "application/json", schema =
                                     @Schema(implementation = DefaultResponseDto.class))
@@ -74,13 +73,13 @@ public class TaskRestControllerV1 {
                     @ApiResponse(responseCode = "500", description = "Internal server error",
                             content = {
                                     @Content(mediaType = "application/json", schema =
-                                    @Schema(implementation = Exception.class))
+                                    @Schema(implementation = DefaultResponseDto.class))
                             }
                     )
             }
     )
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('admin') || hasRole('teacher')")
+    @PreAuthorize("hasRole('teacher')")
     public TaskResponseDto findTaskById(
             @PathVariable("id") Integer id
     ) {
@@ -99,12 +98,12 @@ public class TaskRestControllerV1 {
                                     @Content(mediaType = "application/json", schema =
                                     @Schema(implementation = TaskResponseDto.class))
                             }),
-                    @ApiResponse(responseCode = "400", description = "Incorrect subject id",
+                    @ApiResponse(responseCode = "400", description = "Bad request - incorrect subject id",
                             content = {
                                     @Content(mediaType = "application/json", schema =
                                     @Schema(implementation = DefaultResponseDto.class))
                             }),
-                    @ApiResponse(responseCode = "400", description = "Incorrect teacher id",
+                    @ApiResponse(responseCode = "400", description = "Bad request - incorrect teacher id",
                             content = {
                                     @Content(mediaType = "application/json", schema =
                                     @Schema(implementation = DefaultResponseDto.class))
@@ -112,18 +111,102 @@ public class TaskRestControllerV1 {
                     @ApiResponse(responseCode = "500", description = "Internal server error",
                             content = {
                                     @Content(mediaType = "application/json", schema =
-                                    @Schema(implementation = TeacherNotFoundException.class))
+                                    @Schema(implementation = DefaultResponseDto.class))
                             }
                     )
             }
     )
     @PostMapping
-    @PreAuthorize("hasRole('admin') || hasRole('teacher')")
+    @PreAuthorize("hasRole('teacher')")
     public TaskResponseDto createTask(
             @RequestBody TaskCreateRequestDto requestDto,
             @AuthenticationPrincipal Jwt token
     ) {
         log.info("The request has been received to create a task with data");
         return taskService.createTask(requestDto, token);
+    }
+
+
+    @Operation(
+            summary = "Update task.",
+            operationId = "updateTask",
+            description = "Update task.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Ok",
+                            content = {
+                                    @Content(mediaType = "application/json", schema =
+                                    @Schema(implementation = TaskResponseDto.class))
+                            }),
+                    @ApiResponse(responseCode = "400", description = "Bad request - incorrect task id",
+                            content = {
+                                    @Content(mediaType = "application/json", schema =
+                                    @Schema(implementation = DefaultResponseDto.class))
+                            }),
+                    @ApiResponse(responseCode = "400", description = "Bad request - the user is not the task owner",
+                            content = {
+                                    @Content(mediaType = "application/json", schema =
+                                    @Schema(implementation = DefaultResponseDto.class))
+                            }),
+                    @ApiResponse(responseCode = "400", description = "Bad request - incorrect subject id",
+                            content = {
+                                    @Content(mediaType = "application/json", schema =
+                                    @Schema(implementation = DefaultResponseDto.class))
+                            }),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = {
+                                    @Content(mediaType = "application/json", schema =
+                                    @Schema(implementation = DefaultResponseDto.class))
+                            }
+                    )
+            }
+    )
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('teacher')")
+    public TaskResponseDto updateTask(
+            @PathVariable Integer id,
+            @RequestBody TaskUpdateRequestDto requestDto,
+            @AuthenticationPrincipal Jwt token
+    ) {
+        log.info("The request has been received to update a task with data");
+        return taskService.updateTask(id, requestDto, token);
+    }
+
+
+    @Operation(
+            summary = "Delete task.",
+            operationId = "deleteTask",
+            description = "Delete task.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Ok",
+                            content = {
+                                    @Content(mediaType = "application/json", schema =
+                                    @Schema(implementation = TaskResponseDto.class))
+                            }),
+                    @ApiResponse(responseCode = "400", description = "Bad request - incorrect task id",
+                            content = {
+                                    @Content(mediaType = "application/json", schema =
+                                    @Schema(implementation = DefaultResponseDto.class))
+                            }),
+                    @ApiResponse(responseCode = "400", description = "Bad request - the user is not the task owner",
+                            content = {
+                                    @Content(mediaType = "application/json", schema =
+                                    @Schema(implementation = DefaultResponseDto.class))
+                            }),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = {
+                                    @Content(mediaType = "application/json", schema =
+                                    @Schema(implementation = DefaultResponseDto.class))
+                            }
+                    )
+            }
+    )
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('teacher')")
+    public DefaultResponseDto deleteTask(
+            @PathVariable Integer id,
+            @AuthenticationPrincipal Jwt token
+    ) {
+        log.info("The request has been received to delete a task");
+        return taskService.deleteTask(id, token);
     }
 }
