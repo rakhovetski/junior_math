@@ -1,5 +1,6 @@
 package ru.rakhovetski.juniormath.domain.dto.tasks;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,15 +12,37 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskResponseDto {
+
+    @JsonProperty("id")
     private Integer id;
+
+    @JsonProperty("class_number")
     private Short classNumber;
+
+    @JsonProperty("topic")
     private String topic;
+
+    @JsonProperty("condition")
     private String condition;
+
+    @JsonProperty("answer")
     private String answer;
+
+    @JsonProperty("solve")
     private String solve;
+
+    @JsonProperty("created_by")
     private String createdBy;
+
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
+
+    @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
+
+    @JsonProperty("teacher_id")
     private Integer teacherId;
+
+    @JsonProperty("subject_name")
     private String subjectName;
 }
