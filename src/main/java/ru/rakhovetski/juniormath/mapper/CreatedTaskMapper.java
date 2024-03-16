@@ -14,6 +14,7 @@ public class CreatedTaskMapper {
                 task.getCondition(),
                 task.getAnswer(),
                 task.getSolve(),
+                task.getCreatedBy(),
                 task.getCreatedAt(),
                 task.getUpdatedAt(),
                 task.getTeacher().getId(),

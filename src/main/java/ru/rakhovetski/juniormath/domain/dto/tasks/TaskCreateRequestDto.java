@@ -42,8 +42,4 @@ public class TaskCreateRequestDto {
     @NotBlank
     @JsonProperty("subject_id")
     private Integer subjectId;
-
-    @NotBlank
-    @JsonProperty("teacher_id")
-    private Integer teacherId;
 }

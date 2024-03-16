@@ -17,6 +17,7 @@ public class TaskResponseDto {
     private String condition;
     private String answer;
     private String solve;
+    private String createdBy;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Integer teacherId;

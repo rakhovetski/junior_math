@@ -49,6 +49,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public PageResponseDto<TaskResponseDto> findAllTasksWithPagination(TaskFilterDto taskFilter, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
+        if (taskFilter == null) {
+            taskFilter = new TaskFilterDto();
+        }
         if (taskFilter.getSubjectIds() == null) {
             log.info("Passed subject ids == null, all subject ids are used");
             taskFilter.setSubjectIds(subjectRepository.findAll().stream().map(Subject::getId).collect(Collectors.toList()));
@@ -75,10 +78,11 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponseDto createTask(TaskCreateRequestDto requestDto, Jwt jwtToken) {
-        Teacher teacher = findTeacherById(requestDto.getTeacherId());
         Subject subject = findSubjectById(requestDto.getSubjectId());
 
         String username = DataByJwtUtil.getUsernameJwtClaim(jwtToken);
+
+        Teacher teacher = findTeacherByUsername(username);
 
         Task task = Task.builder()
                 .classNumber(requestDto.getClassNumber())
@@ -142,8 +146,8 @@ public class TaskServiceImpl implements TaskService {
                 LocalDateTime.now());
     }
 
-    private Teacher findTeacherById(Integer id) {
-        return teacherRepository.findById(id).orElseThrow(
+    private Teacher findTeacherByUsername(String username) {
+        return teacherRepository.findByUsername(username).orElseThrow(
                 () -> {
                     log.error("Error - the teacher was not found by id");
                     return new TeacherNotFoundException(ErrorCode.TEACHER_NOT_FOUND.getMessage());

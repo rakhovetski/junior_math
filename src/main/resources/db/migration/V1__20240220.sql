@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS users
 (
-    id               serial                                        not null
+    id               serial
     primary key,
     created_at       timestamp   default now()                     not null,
     updated_at       timestamp   default now(),
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS room
 (
-    id               serial                                        not null
+    id               serial
     primary key,
     code             varchar(10)                 unique            not null,
     name             varchar(256)                                  not null,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS room
 
 CREATE TABLE IF NOT EXISTS users_room
 (
-    id               serial                                        not null
+    id               serial
     primary key,
     users_id         int
     references       users(id),
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS characters
 
 CREATE TABLE IF NOT EXISTS student
 (
-    id               int                                           not null
+    id               int
     primary key      references users(id),
     experience       int         default 0                         not null,
     level            int         default 1                         not null,
@@ -58,14 +58,14 @@ CREATE TABLE IF NOT EXISTS student
 
 CREATE TABLE IF NOT EXISTS teacher
 (
-    id               int                                           not null
+    id               int
     primary key      references users(id)
 );
 
 
 CREATE TABLE IF NOT EXISTS subject
 (
-    id               serial                                        not null
+    id               serial
     primary key,
     name             varchar(128)
 );
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS subject
 
 CREATE TABLE IF NOT EXISTS task
 (
-    id               int                                           not null
+    id               serial
     primary key,
     class            smallint,
     topic            varchar(256)                                  not null,
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS task
 
 CREATE TABLE IF NOT EXISTS test
 (
-    id               serial                                        not null
+    id               serial
     primary key,
     name             varchar(256)                                  not null,
     created_at       timestamp   default now()                     not null,
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS test
 
 CREATE TABLE IF NOT EXISTS task_test
 (
-    id               serial                                        not null
+    id               serial
     primary key,
     task_id          int
     references       task(id),
