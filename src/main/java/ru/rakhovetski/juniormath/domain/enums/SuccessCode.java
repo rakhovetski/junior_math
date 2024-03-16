@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum SuccessCode {
     ROOM_SUCCESS_DELETED("The room was successfully deleted"),
+    TASK_SUCCESS_DELETED("The task was successfully deleted"),
     USER_SUCCESS_LOGOUT("User success logout");
 
     private final String message;

@@ -1,5 +1,6 @@
-package ru.rakhovetski.juniormath.domain.dto;
+package ru.rakhovetski.juniormath.domain.dto.rooms;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,10 +13,21 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RoomDtoResponse {
 
+    @JsonProperty("room_id")
     private UUID roomId;
+
+    @JsonProperty("code")
     private Integer code;
+
+    @JsonProperty("name")
     private String name;
+
+    @JsonProperty("class_number")
     private Short classNumber;
+
+    @JsonProperty("created_by")
     private String createdBy;
+
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 }

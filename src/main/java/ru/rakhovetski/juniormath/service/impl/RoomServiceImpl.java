@@ -24,6 +24,7 @@ import ru.rakhovetski.juniormath.repository.RoomRepository;
 import ru.rakhovetski.juniormath.repository.UserRepository;
 import ru.rakhovetski.juniormath.repository.UserRoomRepository;
 import ru.rakhovetski.juniormath.service.RoomService;
+import ru.rakhovetski.juniormath.util.DataByJwtUtil;
 import ru.rakhovetski.juniormath.util.RoomCodeGenerator;
 
 import java.time.LocalDateTime;
@@ -45,7 +46,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomResponseDto createRoom(RoomCreateRequestDto requestDto, Jwt jwtToken) {
-        String username = getUsernameJwtClaim(jwtToken);
+        String username = DataByJwtUtil.getUsernameJwtClaim(jwtToken);
         String code = RoomCodeGenerator.generateRoomCode();
 
         while (roomRepository.findByCode(code).isPresent()) {
@@ -74,7 +75,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public RoomResponseDto updateRoom(Integer roomId, RoomUpdateRequestDto requestDto, Jwt jwtToken) {
         Room room = findRoomById(roomId);
-        String username = getUsernameJwtClaim(jwtToken);
+        String username = DataByJwtUtil.getUsernameJwtClaim(jwtToken);
 
         validateRoomCreator(username, room.getCreatedBy());
 
@@ -88,7 +89,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public DefaultResponseDto deleteRoom(Integer roomId, Jwt jwtToken) {
         Room room = findRoomById(roomId);
-        String username = getUsernameJwtClaim(jwtToken);
+        String username = DataByJwtUtil.getUsernameJwtClaim(jwtToken);
 
         validateRoomCreator(username, room.getCreatedBy());
 
@@ -136,10 +137,6 @@ public class RoomServiceImpl implements RoomService {
         return userRepository.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage())
         );
-    }
-
-    private String getUsernameJwtClaim(Jwt jwtToken) {
-        return jwtToken.getClaim(USERNAME_JWT_CLAIM);
     }
 
     private void validateRoomCreator(String requestUsername, String roomCreatedBy) {

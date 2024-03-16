@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS room
     code             varchar(10)                 unique            not null,
     name             varchar(256)                                  not null,
     class            smallint                                      not null,
-    created_by       varchar(256)                                  not null,
+    created_by       varchar(128)                                  not null,
     created_at       timestamp   default now()                     not null
 );
 
@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS task
     condition        text                                          not null,
     answer           varchar(128)                                  not null,
     solve            text                                          not null,
+    created_by       varchar(128)                                  not null,
     created_at       timestamp   default now()                     not null,
     updated_at       timestamp   default now(),
     teacher_id       int

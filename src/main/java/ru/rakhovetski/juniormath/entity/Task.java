@@ -37,6 +37,9 @@ public class Task implements BaseEntity<Integer>{
     @Column(name = "solve")
     private String solve;
 
+    @Column(name = "created_by")
+    private String createdBy;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

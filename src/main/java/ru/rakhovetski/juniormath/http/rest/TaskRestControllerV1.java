@@ -8,8 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import ru.rakhovetski.juniormath.domain.dto.*;
+import ru.rakhovetski.juniormath.domain.dto.tasks.TaskCreateRequestDto;
+import ru.rakhovetski.juniormath.domain.dto.tasks.TaskFilterDto;
+import ru.rakhovetski.juniormath.domain.dto.tasks.TaskResponseDto;
 import ru.rakhovetski.juniormath.exception.TeacherNotFoundException;
 import ru.rakhovetski.juniormath.service.TaskService;
 
@@ -115,9 +120,10 @@ public class TaskRestControllerV1 {
     @PostMapping
     @PreAuthorize("hasRole('admin') || hasRole('teacher')")
     public TaskResponseDto createTask(
-            @RequestBody TaskCreateRequestDto requestDto
+            @RequestBody TaskCreateRequestDto requestDto,
+            @AuthenticationPrincipal Jwt token
     ) {
         log.info("The request has been received to create a task with data");
-        return taskService.createTask(requestDto);
+        return taskService.createTask(requestDto, token);
     }
 }

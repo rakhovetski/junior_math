@@ -15,6 +15,8 @@ public enum ErrorCode {
     ROOM_NOT_FOUND("Room not found"),
     TEACHER_CANNOT_CHANGE_ROOM("The teacher cannot change the room"),
     UNABLE_CREATE_ADMIN("Unable to create admin"),
+    TASK_NOT_FOUND("Task not found"),
+    TEACHER_CANNOT_CHANGE_TASK("The teacher cannot change the task"),
     TASK_DOES_NOT_EXISTS("Task does not exist");
 
     private final String message;

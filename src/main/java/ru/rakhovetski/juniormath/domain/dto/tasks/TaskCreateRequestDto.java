@@ -1,4 +1,4 @@
-package ru.rakhovetski.juniormath.domain.dto;
+package ru.rakhovetski.juniormath.domain.dto.tasks;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,6 +17,7 @@ import java.util.UUID;
 @Schema(description = "Dto request create task")
 public class TaskCreateRequestDto {
 
+    @NotBlank
     @Max(11)
     @Min(1)
     @JsonProperty("class_number")

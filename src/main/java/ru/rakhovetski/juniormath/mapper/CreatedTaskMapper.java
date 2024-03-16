@@ -1,7 +1,7 @@
 package ru.rakhovetski.juniormath.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.rakhovetski.juniormath.domain.dto.TaskResponseDto;
+import ru.rakhovetski.juniormath.domain.dto.tasks.TaskResponseDto;
 import ru.rakhovetski.juniormath.entity.Task;
 
 @Component

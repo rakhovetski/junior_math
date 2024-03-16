@@ -16,13 +16,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             SubjectNotFoundException.class,
             IncorrectTaskDataException.class,
             TeacherNotFoundException.class,
-            TaskDoesNotExistException.class,
             IncorrectRoleException.class,
             IncorrectLogoutTokenException.class,
             TeacherNotFoundException.class,
             UserNotFoundException.class,
             RoomNotFoundException.class,
-            ChangeRoomException.class})
+            ChangeRoomException.class,
+            TaskNotFoundException.class})
     public ResponseEntity<?> handleBadRequestExceptions(
             Exception e
     ) {

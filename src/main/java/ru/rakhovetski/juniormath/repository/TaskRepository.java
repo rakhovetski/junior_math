@@ -11,15 +11,13 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Integer> {
 
-    Page<Task> findAllBy(Pageable pageable);
-
-    @Query(value = "SELECT task.* FROM task" +
-            "JOIN subject ON taks.subject_id = subject.id" +
-            "WHERE subject.id IN (:subjectIds)" +
+    @Query(value = "SELECT task.* FROM task " +
+            "JOIN subject ON task.subject_id = subject.id " +
+            "WHERE subject.id IN (:subjectIds) " +
             "AND task.class IN (:classNumbers);",
-            countQuery = "SELECT count(*) FROM task" +
-                    "JOIN subject ON taks.subject_id = subject.id" +
-                    "WHERE subject.id IN (:subjectIds)" +
+            countQuery = "SELECT count(task.*) FROM task " +
+                    "JOIN subject ON task.subject_id = subject.id " +
+                    "WHERE subject.id IN (:subjectIds) " +
                     "AND task.class IN (:classNumbers);",
             nativeQuery = true)
     Page<Task> findAllByFilters(List<Integer> subjectIds, List<Short> classNumbers, Pageable pageable);

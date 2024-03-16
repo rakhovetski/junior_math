@@ -1,4 +1,4 @@
-package ru.rakhovetski.juniormath.domain.dto;
+package ru.rakhovetski.juniormath.domain.dto.tasks;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

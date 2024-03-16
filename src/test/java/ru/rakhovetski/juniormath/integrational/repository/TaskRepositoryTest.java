@@ -1,82 +1,107 @@
 package ru.rakhovetski.juniormath.integrational.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
+import ru.rakhovetski.juniormath.entity.Subject;
 import ru.rakhovetski.juniormath.entity.Task;
 import ru.rakhovetski.juniormath.integrational.IntegrationBaseTest;
+import ru.rakhovetski.juniormath.repository.SubjectRepository;
 import ru.rakhovetski.juniormath.repository.TaskRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @Sql({
         "/db/data.sql"
 })
-@RequiredArgsConstructor
 public class TaskRepositoryTest extends IntegrationBaseTest {
 
     @Autowired
     private TaskRepository taskRepository;
-    private static final Integer PAGE_SIZE = 10;
-    private static final Integer PAGE_NUMBER = 0;
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     @Test
-    public void testFindFindAllBySubjectNameIdAndClassNumberCorrect() {
-        Long totalPageCount = 1L;
-        Integer subject_id = 1;
-        Short class_number = 9;
-        Short classNumber = 9;
-        String topicAl = "topicAl";
+    public void testFindWithAllFiltersAllPagination() {
+        List<Integer> subjectIds = subjectRepository.findAll().stream().map(Subject::getId).toList();
+        List<Short> classNumbers = IntStream.range(1, 11).boxed().map(Integer::shortValue).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(0, 10);
 
-        Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
-        Page<Task> result = taskRepository.findAllByFilters(List.of(subject_id), List.of(class_number), pageable);
-
-        assertEquals(totalPageCount, result.getTotalElements());
-
-        Task firstResult = result.stream().toList().getFirst();
-
-        assertEquals(classNumber, firstResult.getClassNumber());
-        assertEquals(topicAl, firstResult.getTopic());
+        Page<Task> result = taskRepository.findAllByFilters(subjectIds, classNumbers, pageable);
+        assertEquals(3, result.getTotalElements());
+        assertEquals(1, result.getTotalPages());
     }
 
     @Test
-    public void testFindFindAllBySubjectNameIdAndClassNumberCorrectTwoElements() {
-        Long totalPageCount = 2L;
-        Integer subjectId = 2;
-        Short classNumber = 10;
-        String topicIT1 = "topicIT1";
-        String topicIT2 = "topicIT2";
+    public void testFindWithAllFiltersOneItemPagination() {
+        List<Integer> subjectIds = subjectRepository.findAll().stream().map(Subject::getId).toList();
+        List<Short> classNumbers = IntStream.range(1, 11).boxed().map(Integer::shortValue).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(0, 1);
 
-        Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
-        Page<Task> result = taskRepository.findAllByFilters(List.of(subjectId), List.of(classNumber), pageable);
-
-        assertEquals(totalPageCount, result.getTotalElements());
-
-        Task firstTask = result.stream().toList().getFirst();
-
-        assertEquals(classNumber, firstTask.getClassNumber());
-        assertEquals(topicIT1, firstTask.getTopic());
-
-        Task lastTask = result.stream().toList().getLast();
-
-        assertEquals(classNumber, lastTask.getClassNumber());
-        assertEquals(topicIT2, lastTask.getTopic());
+        Page<Task> result = taskRepository.findAllByFilters(subjectIds, classNumbers, pageable);
+        assertEquals(3, result.getTotalElements());
+        assertEquals(3, result.getTotalPages());
     }
 
     @Test
-    public void testFindFindAllBySubjectNameIdAndClassNumberIncorrectClassNumber() {
-        Integer subject_id = 1;
-        Short incorrectClassNumber = 12;
-        Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
-        Page<Task> result = taskRepository.findAllByFilters(List.of(subject_id), List.of(incorrectClassNumber), pageable);
+    public void testFindWithOneSubjectId() {
+        List<Integer> subjectIds = List.of(1);
+        List<Short> classNumbers = IntStream.range(1, 11).boxed().map(Integer::shortValue).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(0, 10);
 
+        Page<Task> result = taskRepository.findAllByFilters(subjectIds, classNumbers, pageable);
+        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.getTotalPages());
+    }
+
+    @Test
+    public void testFindWithOneClassNumberId() {
+        List<Integer> subjectIds = subjectRepository.findAll().stream().map(Subject::getId).toList();
+        List<Short> classNumbers = List.of((short)10);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Task> result = taskRepository.findAllByFilters(subjectIds, classNumbers, pageable);
+        assertEquals(2, result.getTotalElements());
+        assertEquals(1, result.getTotalPages());
+    }
+
+    @Test
+    public void testFindWithOneClassNumberIdAndOneSubjectId() {
+        List<Integer> subjectIds = List.of(1);
+        List<Short> classNumbers = List.of((short)9);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Task> result = taskRepository.findAllByFilters(subjectIds, classNumbers, pageable);
+        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.getTotalPages());
+    }
+
+    @Test
+    public void testFindWithIncorrectSubjectIds() {
+        List<Integer> subjectIds = List.of(100);
+        List<Short> classNumbers = List.of((short)10);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Task> result = taskRepository.findAllByFilters(subjectIds, classNumbers, pageable);
         assertEquals(0, result.getTotalElements());
     }
 
+    @Test
+    public void testFindWithIncorrectClassNumbers() {
+        List<Integer> subjectIds = List.of(1);
+        List<Short> classNumbers = List.of((short)12);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Task> result = taskRepository.findAllByFilters(subjectIds, classNumbers, pageable);
+        assertEquals(0, result.getTotalElements());
+    }
 }
