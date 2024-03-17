@@ -65,7 +65,7 @@ public class RoomServiceTest extends IntegrationBaseTest {
 
         RoomUpdateRequestDto updateRequestDto = RoomDataGenerator.generateUpdateRoom();
 
-        RoomResponseDto updateResult = roomService.updateRoom(createResult.getId(), updateRequestDto, jwt);
+        RoomResponseDto updateResult = roomService.updateRoom(createResult.getCode(), updateRequestDto, jwt);
 
         assertEquals(updateRequestDto.getName(), updateResult.getName());
         assertEquals(updateRequestDto.getClassNumber(), updateResult.getClassNumber());
@@ -85,7 +85,7 @@ public class RoomServiceTest extends IntegrationBaseTest {
         updateRequestDto.setName(null);
         updateRequestDto.setClassNumber(null);
 
-        RoomResponseDto updateResult = roomService.updateRoom(createResult.getId(), updateRequestDto, jwt);
+        RoomResponseDto updateResult = roomService.updateRoom(createResult.getCode(), updateRequestDto, jwt);
 
         assertEquals(createResult.getName(), updateResult.getName());
         assertEquals(createResult.getClassNumber(), updateResult.getClassNumber());
@@ -106,7 +106,7 @@ public class RoomServiceTest extends IntegrationBaseTest {
 
         RoomUpdateRequestDto updateRequestDto = RoomDataGenerator.generateUpdateRoom();
 
-        assertThrows(ChangeRoomException.class, () -> roomService.updateRoom(createResult.getId(), updateRequestDto, jwt1));
+        assertThrows(ChangeRoomException.class, () -> roomService.updateRoom(createResult.getCode(), updateRequestDto, jwt1));
     }
 
     @Test
@@ -119,9 +119,9 @@ public class RoomServiceTest extends IntegrationBaseTest {
         roomService.createRoom(createRequestDto, jwt);
 
         RoomUpdateRequestDto updateRequestDto = RoomDataGenerator.generateUpdateRoom();
-        Integer roomId = 1_000_000;
+        String roomCode = "EEEEEE";
 
-        assertThrows(RoomNotFoundException.class, () -> roomService.updateRoom(roomId, updateRequestDto, jwt));
+        assertThrows(RoomNotFoundException.class, () -> roomService.updateRoom(roomCode, updateRequestDto, jwt));
     }
 
     @Test
@@ -133,7 +133,7 @@ public class RoomServiceTest extends IntegrationBaseTest {
 
         RoomResponseDto createResult = roomService.createRoom(createRequestDto, jwt);
 
-        DefaultResponseDto responseDto = roomService.deleteRoom(createResult.getId(), jwt);
+        DefaultResponseDto responseDto = roomService.deleteRoom(createResult.getCode(), jwt);
 
         assertEquals(HttpStatus.NO_CONTENT.name(), responseDto.getStatus());
     }
@@ -147,9 +147,9 @@ public class RoomServiceTest extends IntegrationBaseTest {
 
         RoomResponseDto createResult = roomService.createRoom(createRequestDto, jwt);
 
-        Integer incorrectRoomId = 1_000_000;
+        String roomCode = "EEEEEE";
 
-        assertThrows(RoomNotFoundException.class, () -> roomService.deleteRoom(incorrectRoomId, jwt));
+        assertThrows(RoomNotFoundException.class, () -> roomService.deleteRoom(roomCode, jwt));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class RoomServiceTest extends IntegrationBaseTest {
         String incorrectUsername = "username-incorrect";
         Jwt jwt1 = JwtGenerator.generateJwt(incorrectUsername);
 
-        assertThrows(ChangeRoomException.class, () -> roomService.deleteRoom(createResult.getId(), jwt1));
+        assertThrows(ChangeRoomException.class, () -> roomService.deleteRoom(createResult.getCode(), jwt1));
     }
 
     @Test

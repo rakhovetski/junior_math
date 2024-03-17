@@ -9,10 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import ru.rakhovetski.juniormath.domain.dto.DefaultResponseDto;
-import ru.rakhovetski.juniormath.domain.dto.PageResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.rooms.*;
 import ru.rakhovetski.juniormath.exception.ChangeRoomException;
 import ru.rakhovetski.juniormath.exception.RoomNotFoundException;
@@ -80,7 +78,7 @@ public class RoomRestControllerV1 {
                     )
             }
     )
-    @GetMapping("/by-code/{code}")
+    @GetMapping("/{code}")
     public RoomsDetailResponseDto findRoomByCode(@PathVariable("code") String code) {
         RoomCodeRequestDto requestDto = new RoomCodeRequestDto(code);
         return roomService.findRoomByCode(requestDto);
@@ -114,12 +112,12 @@ public class RoomRestControllerV1 {
                     )
             }
     )
-    @PutMapping("/by-id/{id}")
+    @PutMapping("/{code}")
     @PreAuthorize("hasRole('admin') || hasRole('teacher')")
-    public RoomResponseDto updateRoom(@PathVariable("id") Integer id,
+    public RoomResponseDto updateRoom(@PathVariable("code") String code,
                                       @RequestBody RoomUpdateRequestDto requestDto,
                                       @AuthenticationPrincipal Jwt token) {
-        return roomService.updateRoom(id, requestDto, token);
+        return roomService.updateRoom(code, requestDto, token);
     }
 
     @Operation(
@@ -150,10 +148,10 @@ public class RoomRestControllerV1 {
                     )
             }
     )
-    @DeleteMapping("/by-id/{id}")
+    @DeleteMapping("/{code}")
     @PreAuthorize("hasRole('admin') || hasRole('teacher')")
-    public DefaultResponseDto deleteRoom(@PathVariable("id") Integer id,
+    public DefaultResponseDto deleteRoom(@PathVariable("code") String code,
                                          @AuthenticationPrincipal Jwt token) {
-        return roomService.deleteRoom(id, token);
+        return roomService.deleteRoom(code, token);
     }
 }

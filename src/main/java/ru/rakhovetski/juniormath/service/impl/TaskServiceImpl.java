@@ -13,7 +13,7 @@ import ru.rakhovetski.juniormath.domain.dto.DefaultResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.PageResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskFilterDto;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskCreateRequestDto;
-import ru.rakhovetski.juniormath.domain.dto.tasks.TaskResponseDto;
+import ru.rakhovetski.juniormath.domain.dto.tasks.TaskDetailResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskUpdateRequestDto;
 import ru.rakhovetski.juniormath.domain.enums.ErrorCode;
 import ru.rakhovetski.juniormath.domain.enums.SuccessCode;
@@ -47,7 +47,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponseDto<TaskResponseDto> findAllTasksWithPagination(TaskFilterDto taskFilter, Integer page, Integer size) {
+    public PageResponseDto<TaskDetailResponseDto> findAllTasksWithPagination(TaskFilterDto taskFilter, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         if (taskFilter == null) {
             taskFilter = new TaskFilterDto();
@@ -67,7 +67,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional(readOnly = true)
     @Override
-    public TaskResponseDto findTaskById(Integer taskId) {
+    public TaskDetailResponseDto findTaskById(Integer taskId) {
         Task task = findTaskByIdCheck(taskId);
 
         log.info("Task find by id - {}, with topic {}", taskId, task.getTopic());
@@ -77,7 +77,7 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public TaskResponseDto createTask(TaskCreateRequestDto requestDto, Jwt jwtToken) {
+    public TaskDetailResponseDto createTask(TaskCreateRequestDto requestDto, Jwt jwtToken) {
         Subject subject = findSubjectById(requestDto.getSubjectId());
 
         String username = DataByJwtUtil.getUsernameJwtClaim(jwtToken);
@@ -106,7 +106,7 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public TaskResponseDto updateTask(Integer taskId, TaskUpdateRequestDto requestDto, Jwt jwtToken) {
+    public TaskDetailResponseDto updateTask(Integer taskId, TaskUpdateRequestDto requestDto, Jwt jwtToken) {
         Task task = findTaskByIdCheck(taskId);
         String requestUsername = DataByJwtUtil.getUsernameJwtClaim(jwtToken);
 

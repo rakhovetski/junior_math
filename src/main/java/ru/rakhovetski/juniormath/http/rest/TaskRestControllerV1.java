@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.rakhovetski.juniormath.domain.dto.*;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskCreateRequestDto;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskFilterDto;
-import ru.rakhovetski.juniormath.domain.dto.tasks.TaskResponseDto;
+import ru.rakhovetski.juniormath.domain.dto.tasks.TaskDetailResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskUpdateRequestDto;
 import ru.rakhovetski.juniormath.service.TaskService;
 
@@ -45,7 +45,7 @@ public class TaskRestControllerV1 {
     )
     @GetMapping
     @PreAuthorize("hasRole('teacher')")
-    public PageResponseDto<TaskResponseDto> findAllWithPagination(
+    public PageResponseDto<TaskDetailResponseDto> findAllWithPagination(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
             @RequestBody TaskFilterDto taskFilter
@@ -63,7 +63,7 @@ public class TaskRestControllerV1 {
                     @ApiResponse(responseCode = "200", description = "Ok",
                             content = {
                                     @Content(mediaType = "application/json", schema =
-                                    @Schema(implementation = TaskResponseDto.class))
+                                    @Schema(implementation = TaskDetailResponseDto.class))
                             }),
                     @ApiResponse(responseCode = "400", description = "Bad request - incorrect task id",
                             content = {
@@ -80,7 +80,7 @@ public class TaskRestControllerV1 {
     )
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('teacher')")
-    public TaskResponseDto findTaskById(
+    public TaskDetailResponseDto findTaskById(
             @PathVariable("id") Integer id
     ) {
         log.info("The request has been received for a task");
@@ -96,7 +96,7 @@ public class TaskRestControllerV1 {
                     @ApiResponse(responseCode = "200", description = "Ok",
                             content = {
                                     @Content(mediaType = "application/json", schema =
-                                    @Schema(implementation = TaskResponseDto.class))
+                                    @Schema(implementation = TaskDetailResponseDto.class))
                             }),
                     @ApiResponse(responseCode = "400", description = "Bad request - incorrect subject id",
                             content = {
@@ -118,7 +118,7 @@ public class TaskRestControllerV1 {
     )
     @PostMapping
     @PreAuthorize("hasRole('teacher')")
-    public TaskResponseDto createTask(
+    public TaskDetailResponseDto createTask(
             @RequestBody TaskCreateRequestDto requestDto,
             @AuthenticationPrincipal Jwt token
     ) {
@@ -135,7 +135,7 @@ public class TaskRestControllerV1 {
                     @ApiResponse(responseCode = "200", description = "Ok",
                             content = {
                                     @Content(mediaType = "application/json", schema =
-                                    @Schema(implementation = TaskResponseDto.class))
+                                    @Schema(implementation = TaskDetailResponseDto.class))
                             }),
                     @ApiResponse(responseCode = "400", description = "Bad request - incorrect task id",
                             content = {
@@ -162,7 +162,7 @@ public class TaskRestControllerV1 {
     )
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('teacher')")
-    public TaskResponseDto updateTask(
+    public TaskDetailResponseDto updateTask(
             @PathVariable Integer id,
             @RequestBody TaskUpdateRequestDto requestDto,
             @AuthenticationPrincipal Jwt token
@@ -180,7 +180,7 @@ public class TaskRestControllerV1 {
                     @ApiResponse(responseCode = "200", description = "Ok",
                             content = {
                                     @Content(mediaType = "application/json", schema =
-                                    @Schema(implementation = TaskResponseDto.class))
+                                    @Schema(implementation = TaskDetailResponseDto.class))
                             }),
                     @ApiResponse(responseCode = "400", description = "Bad request - incorrect task id",
                             content = {

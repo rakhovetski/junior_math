@@ -9,7 +9,7 @@ import ru.rakhovetski.juniormath.domain.dto.DefaultResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.PageResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskCreateRequestDto;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskFilterDto;
-import ru.rakhovetski.juniormath.domain.dto.tasks.TaskResponseDto;
+import ru.rakhovetski.juniormath.domain.dto.tasks.TaskDetailResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskUpdateRequestDto;
 import ru.rakhovetski.juniormath.exception.ChangeTaskException;
 import ru.rakhovetski.juniormath.exception.SubjectNotFoundException;
@@ -46,9 +46,9 @@ public class TaskServiceTest extends IntegrationBaseTest {
 
         TaskFilterDto taskFilterDto = null;
 
-        PageResponseDto<TaskResponseDto> result = taskService.findAllTasksWithPagination(taskFilterDto, page, size);
+        PageResponseDto<TaskDetailResponseDto> result = taskService.findAllTasksWithPagination(taskFilterDto, page, size);
 
-        TaskResponseDto firstTask = result.getData().getFirst();
+        TaskDetailResponseDto firstTask = result.getData().getFirst();
 
         assertEquals(firstTaskTopic, firstTask.getTopic());
         assertEquals(firstTaskCondition, firstTask.getCondition());
@@ -77,9 +77,9 @@ public class TaskServiceTest extends IntegrationBaseTest {
 
         TaskFilterDto taskFilterDto = new TaskFilterDto(subjectIds, classNumbers);
 
-        PageResponseDto<TaskResponseDto> result = taskService.findAllTasksWithPagination(taskFilterDto, page, size);
+        PageResponseDto<TaskDetailResponseDto> result = taskService.findAllTasksWithPagination(taskFilterDto, page, size);
 
-        TaskResponseDto firstTask = result.getData().getFirst();
+        TaskDetailResponseDto firstTask = result.getData().getFirst();
 
         assertEquals(firstTaskTopic, firstTask.getTopic());
         assertEquals(firstTaskCondition, firstTask.getCondition());
@@ -100,7 +100,7 @@ public class TaskServiceTest extends IntegrationBaseTest {
         TaskCreateRequestDto createRequestDto = TaskDataGenerator.generateCreateTask();
         var result = taskService.createTask(createRequestDto, jwt);
 
-        TaskResponseDto response = taskService.findTaskById(result.getId());
+        TaskDetailResponseDto response = taskService.findTaskById(result.getId());
 
         assertEquals(createRequestDto.getTopic(), response.getTopic());
         assertEquals(createRequestDto.getCondition(), response.getCondition());

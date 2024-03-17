@@ -8,9 +8,9 @@ public interface RoomService {
 
     RoomResponseDto createRoom(RoomCreateRequestDto requestDto, Jwt jwtToken);
 
-    RoomResponseDto updateRoom(Integer id, RoomUpdateRequestDto requestDto, Jwt jwtToken);
+    RoomResponseDto updateRoom(String code, RoomUpdateRequestDto requestDto, Jwt jwtToken);
 
-    DefaultResponseDto deleteRoom(Integer id, Jwt token);
+    DefaultResponseDto deleteRoom(String code, Jwt token);
 
     RoomsDetailResponseDto findRoomByCode(RoomCodeRequestDto requestDto);
 }

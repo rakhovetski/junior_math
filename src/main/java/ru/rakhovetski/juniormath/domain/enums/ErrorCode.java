@@ -17,7 +17,8 @@ public enum ErrorCode {
     UNABLE_CREATE_ADMIN("Unable to create admin"),
     TASK_NOT_FOUND("Task not found"),
     TEACHER_CANNOT_CHANGE_TASK("The teacher cannot change the task"),
-    TASK_DOES_NOT_EXISTS("Task does not exist");
+    TASK_DOES_NOT_EXISTS("Task does not exist"),
+    TEST_DOES_NOT_EXISTS("Test does not exist");
 
     private final String message;
 

@@ -73,8 +73,8 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomResponseDto updateRoom(Integer roomId, RoomUpdateRequestDto requestDto, Jwt jwtToken) {
-        Room room = findRoomById(roomId);
+    public RoomResponseDto updateRoom(String code, RoomUpdateRequestDto requestDto, Jwt jwtToken) {
+        Room room = findRoomByCode(code);
         String username = DataByJwtUtil.getUsernameJwtClaim(jwtToken);
 
         validateRoomCreator(username, room.getCreatedBy());
@@ -89,8 +89,8 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public DefaultResponseDto deleteRoom(Integer roomId, Jwt jwtToken) {
-        Room room = findRoomById(roomId);
+    public DefaultResponseDto deleteRoom(String code, Jwt jwtToken) {
+        Room room = findRoomByCode(code);
         String username = DataByJwtUtil.getUsernameJwtClaim(jwtToken);
 
         validateRoomCreator(username, room.getCreatedBy());
@@ -136,14 +136,6 @@ public class RoomServiceImpl implements RoomService {
         );
     }
 
-    private Room findRoomById(Integer id) {
-        return roomRepository.findById(id).orElseThrow(
-                () -> {
-                    log.error("Error - the room was not found by id");
-                    return new RoomNotFoundException(ErrorCode.ROOM_NOT_FOUND.getMessage());
-                }
-        );
-    }
 
     private User findUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(

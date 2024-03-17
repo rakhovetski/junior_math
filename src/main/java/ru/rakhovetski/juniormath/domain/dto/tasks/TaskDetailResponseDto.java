@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskResponseDto {
+public class TaskDetailResponseDto {
+
     @JsonProperty("id")
     private Integer id;
 
@@ -23,9 +24,24 @@ public class TaskResponseDto {
     @JsonProperty("condition")
     private String condition;
 
+    @JsonProperty("answer")
+    private String answer;
+
+    @JsonProperty("solve")
+    private String solve;
+
     @JsonProperty("created_by")
     private String createdBy;
 
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
+
+    @JsonProperty("updated_at")
+    private LocalDateTime updatedAt;
+
+    @JsonProperty("teacher_id")
+    private Integer teacherId;
+
+    @JsonProperty("subject_name")
+    private String subjectName;
 }
