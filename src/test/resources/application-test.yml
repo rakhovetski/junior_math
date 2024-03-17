@@ -5,3 +5,16 @@ spring:
   flyway:
     user: admin
     password: admin
+
+
+keycloak:
+  admin-username: admin
+  admin-password: admin
+  admin-realm: master
+  admin-client-id: admin-cli
+  realm: master
+  roles: roles
+  client-id: admin-cli
+  client-secret: client-secret
+  auth-server-url: http://localhost/
+

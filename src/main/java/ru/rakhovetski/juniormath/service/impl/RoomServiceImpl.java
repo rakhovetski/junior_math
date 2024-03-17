@@ -79,8 +79,8 @@ public class RoomServiceImpl implements RoomService {
 
         validateRoomCreator(username, room.getCreatedBy());
 
-        room.setName(requestDto.getName());
-        room.setClassNumber(requestDto.getClassNumber());
+        room.setName(Optional.ofNullable(requestDto.getName()).orElse(room.getName()));
+        room.setClassNumber(Optional.ofNullable(requestDto.getClassNumber()).orElse(room.getClassNumber()));
         Room result = roomRepository.save(room);
 
         log.info("The room was successfully updated with the name - {}", requestDto.getName());

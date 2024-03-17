@@ -1,6 +1,5 @@
 package ru.rakhovetski.juniormath.integrational.service;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Sql({
         "/db/data.sql"
 })
-@RequiredArgsConstructor
 public class TaskServiceTest extends IntegrationBaseTest {
 
     @Autowired

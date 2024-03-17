@@ -1,9 +1,10 @@
 package ru.rakhovetski.juniormath.entity;
 
 import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
 
 @Getter
-public enum Role {
+public enum Role implements GrantedAuthority {
     STUDENT("student"),
     TEACHER("teacher"),
     ADMIN("admin");
@@ -14,4 +15,8 @@ public enum Role {
         this.name = name;
     }
 
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }
