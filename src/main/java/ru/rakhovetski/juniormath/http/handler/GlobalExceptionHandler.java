@@ -22,7 +22,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             UserNotFoundException.class,
             RoomNotFoundException.class,
             ChangeRoomException.class,
-            TaskNotFoundException.class})
+            TaskNotFoundException.class,
+            ChangeTestException.class,
+            ChangeTaskException.class})
     public ResponseEntity<?> handleBadRequestExceptions(
             Exception e
     ) {

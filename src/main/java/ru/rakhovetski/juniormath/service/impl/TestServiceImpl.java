@@ -18,9 +18,7 @@ import ru.rakhovetski.juniormath.entity.Room;
 import ru.rakhovetski.juniormath.entity.Task;
 import ru.rakhovetski.juniormath.entity.TaskTest;
 import ru.rakhovetski.juniormath.entity.Test;
-import ru.rakhovetski.juniormath.exception.ChangeRoomException;
-import ru.rakhovetski.juniormath.exception.RoomNotFoundException;
-import ru.rakhovetski.juniormath.exception.TestNotFoundException;
+import ru.rakhovetski.juniormath.exception.*;
 import ru.rakhovetski.juniormath.mapper.TaskMapper;
 import ru.rakhovetski.juniormath.mapper.TestDetailMapper;
 import ru.rakhovetski.juniormath.mapper.TestMapper;
@@ -76,10 +74,11 @@ public class TestServiceImpl implements TestService {
                 .name(createRequestDto.getName())
                 .startedAt(createRequestDto.getStartedAt())
                 .build();
-
         test.setRoom(room);
 
         Test result = testRepository.save(test);
+
+        validateRoomCreatedDate(result.getCreatedAt(), createRequestDto.getStartedAt());
 
         log.info("The test was successfully created with the name - {}", test.getName());
 
@@ -93,6 +92,7 @@ public class TestServiceImpl implements TestService {
         String username = DataByJwtUtil.getUsernameJwtClaim(jwtToken);
 
         validateRoomCreator(username, room.getCreatedBy());
+        validateRoomCreatedDate(test.getCreatedAt(), createRequestDto.getStartedAt());
 
         test.setName(Optional.ofNullable(createRequestDto.getName()).orElse(test.getName()));
         test.setStartedAt(Optional.ofNullable(createRequestDto.getStartedAt()).orElse(test.getStartedAt()));
@@ -144,7 +144,14 @@ public class TestServiceImpl implements TestService {
     private void validateRoomCreator(String requestUsername, String roomCreatedBy) {
         if (!requestUsername.equals(roomCreatedBy)) {
             log.error("Error - the creator of the room does not match the current teacher");
-            throw new ChangeRoomException(ErrorCode.TEACHER_CANNOT_CHANGE_ROOM.getMessage());
+            throw new ChangeTestException(ErrorCode.TEACHER_CANNOT_CHANGE_TEST.getMessage());
+        }
+    }
+
+    private void validateRoomCreatedDate(LocalDateTime createdAt, LocalDateTime startedAt) {
+        if (createdAt.isAfter(startedAt)) {
+            log.error("Error - the creation date is greater than the start date");
+            throw new CreationDateGreaterStartDateException(ErrorCode.CREATED_AT_GREATER_STARTED_AT.getMessage());
         }
     }
 }

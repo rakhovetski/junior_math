@@ -14,11 +14,13 @@ public enum ErrorCode {
     USER_NOT_FOUND("User not found"),
     ROOM_NOT_FOUND("Room not found"),
     TEACHER_CANNOT_CHANGE_ROOM("The teacher cannot change the room"),
+    TEACHER_CANNOT_CHANGE_TEST("The teacher cannot change the test"),
     UNABLE_CREATE_ADMIN("Unable to create admin"),
     TASK_NOT_FOUND("Task not found"),
     TEACHER_CANNOT_CHANGE_TASK("The teacher cannot change the task"),
     TASK_DOES_NOT_EXISTS("Task does not exist"),
-    TEST_DOES_NOT_EXISTS("Test does not exist");
+    TEST_DOES_NOT_EXISTS("Test does not exist"),
+    CREATED_AT_GREATER_STARTED_AT("The creation date is greater than the start date");
 
     private final String message;
 
