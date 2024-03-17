@@ -1,5 +1,6 @@
 package ru.rakhovetski.juniormath.domain.dto.tasks;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,9 +35,11 @@ public class TaskDetailResponseDto {
     private String createdBy;
 
     @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     @JsonProperty("updated_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
     @JsonProperty("teacher_id")

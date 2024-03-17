@@ -1,5 +1,6 @@
 package ru.rakhovetski.juniormath.domain.dto.tests;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -18,5 +19,6 @@ public class TestUpdateRequestDto {
     private String name;
 
     @JsonProperty("started_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startedAt;
 }

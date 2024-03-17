@@ -17,6 +17,8 @@ import ru.rakhovetski.juniormath.domain.dto.tasks.TaskDetailResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.tasks.TaskUpdateRequestDto;
 import ru.rakhovetski.juniormath.service.TaskService;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -43,13 +45,15 @@ public class TaskRestControllerV1 {
                     )
             }
     )
-    @GetMapping
+    @GetMapping("")
     @PreAuthorize("hasRole('teacher')")
     public PageResponseDto<TaskDetailResponseDto> findAllWithPagination(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
-            @RequestBody TaskFilterDto taskFilter
-    ) {
+            @RequestParam(value = "subject_ids", required = false) List<Integer> subjectIds,
+            @RequestParam(value = "class_numbers", required = false) List<Short> classNumbers
+            ) {
+        TaskFilterDto taskFilter = new TaskFilterDto(subjectIds, classNumbers);
         log.info("The request has been received to receive tasks");
         return taskService.findAllTasksWithPagination(taskFilter, page, size);
     }
@@ -116,7 +120,7 @@ public class TaskRestControllerV1 {
                     )
             }
     )
-    @PostMapping
+    @PostMapping("")
     @PreAuthorize("hasRole('teacher')")
     public TaskDetailResponseDto createTask(
             @RequestBody TaskCreateRequestDto requestDto,

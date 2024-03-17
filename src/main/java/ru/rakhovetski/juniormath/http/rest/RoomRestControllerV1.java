@@ -49,7 +49,7 @@ public class RoomRestControllerV1 {
             }
     )
     @PostMapping()
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('teacher')")
     public RoomResponseDto createRoom(@RequestBody RoomCreateRequestDto requestDto,
                                       @AuthenticationPrincipal Jwt token) {
         return roomService.createRoom(requestDto, token);
@@ -113,7 +113,7 @@ public class RoomRestControllerV1 {
             }
     )
     @PutMapping("/{code}")
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('teacher')")
     public RoomResponseDto updateRoom(@PathVariable("code") String code,
                                       @RequestBody RoomUpdateRequestDto requestDto,
                                       @AuthenticationPrincipal Jwt token) {
@@ -149,7 +149,7 @@ public class RoomRestControllerV1 {
             }
     )
     @DeleteMapping("/{code}")
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('teacher')")
     public DefaultResponseDto deleteRoom(@PathVariable("code") String code,
                                          @AuthenticationPrincipal Jwt token) {
         return roomService.deleteRoom(code, token);

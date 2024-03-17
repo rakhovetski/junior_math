@@ -1,5 +1,6 @@
 package ru.rakhovetski.juniormath.domain.dto.rooms;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,7 @@ public class RoomResponseDto {
     private String createdBy;
 
     @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Schema(name = "Room created at", example = "2001-01-15:00:00:00")
     private LocalDateTime createdAt;
 }

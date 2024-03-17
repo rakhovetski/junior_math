@@ -95,6 +95,8 @@ public class RoomServiceImpl implements RoomService {
 
         validateRoomCreator(username, room.getCreatedBy());
 
+        userRoomRepository.deleteAll(room.getUserRooms());
+
         roomRepository.delete(room);
 
         log.info("The room was successfully deleted with the name - {}", room.getName());

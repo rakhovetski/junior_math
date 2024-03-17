@@ -1,16 +1,15 @@
 package ru.rakhovetski.juniormath.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "users")
+@ToString(of = {"id", "username", "email", "lastname", "firstname", "role"})
+@EqualsAndHashCode(exclude = {"userRooms"})
 @Entity
 @Data
 @NoArgsConstructor

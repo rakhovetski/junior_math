@@ -12,14 +12,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import ru.rakhovetski.juniormath.domain.dto.DefaultResponseDto;
-import ru.rakhovetski.juniormath.domain.dto.rooms.RoomResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.tests.TestCreateRequestDto;
 import ru.rakhovetski.juniormath.domain.dto.tests.TestDetailResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.tests.TestResponseDto;
 import ru.rakhovetski.juniormath.domain.dto.tests.TestUpdateRequestDto;
-import ru.rakhovetski.juniormath.exception.ChangeTaskException;
-import ru.rakhovetski.juniormath.exception.ChangeTestException;
-import ru.rakhovetski.juniormath.exception.UserNotFoundException;
 import ru.rakhovetski.juniormath.service.TestService;
 
 @Slf4j
@@ -60,9 +56,10 @@ public class TestRestControllerV1 {
     )
     @PostMapping("")
     @PreAuthorize("hasRole('teacher')")
-    public TestResponseDto createTest(@PathVariable("room_code") String roomCode,
-                                      @RequestBody TestCreateRequestDto requestDto,
-                                      @AuthenticationPrincipal Jwt jwtToken) {
+    public TestResponseDto createTest(
+            @PathVariable("room_code") String roomCode,
+            @RequestBody TestCreateRequestDto requestDto,
+            @AuthenticationPrincipal Jwt jwtToken) {
         return testService.createTest(roomCode, requestDto, jwtToken);
     }
 

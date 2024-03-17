@@ -66,6 +66,9 @@ public class TestServiceImpl implements TestService {
     public TestResponseDto createTest(String roomCode, TestCreateRequestDto createRequestDto, Jwt jwtToken) {
         Room room = findRoomByCode(roomCode);
 
+        LocalDateTime createdAt = LocalDateTime.now();
+        validateRoomCreatedDate(createdAt, createRequestDto.getStartedAt());
+
         String username = DataByJwtUtil.getUsernameJwtClaim(jwtToken);
 
         validateRoomCreator(username, room.getCreatedBy());
@@ -73,12 +76,11 @@ public class TestServiceImpl implements TestService {
         Test test = Test.builder()
                 .name(createRequestDto.getName())
                 .startedAt(createRequestDto.getStartedAt())
+                .createdAt(createdAt)
                 .build();
         test.setRoom(room);
 
         Test result = testRepository.save(test);
-
-        validateRoomCreatedDate(result.getCreatedAt(), createRequestDto.getStartedAt());
 
         log.info("The test was successfully created with the name - {}", test.getName());
 
